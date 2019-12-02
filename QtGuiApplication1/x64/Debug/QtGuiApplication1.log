@@ -1,0 +1,1 @@
+﻿C:\Users\Lagerst\AppData\Local\QtMsBuild\rcc\qtrcc.targets(115,5): error MSB3073: 命令“"C:\Qt\Qt5.9.2\5.9.2\msvc2017_64\bin\rcc.exe" --list "QtGuiApplication1.qrc" > "x64\Debug\rcc_list.txt" 2> nul”已退出，代码为 3。
