@@ -12,7 +12,7 @@ To use this program, you have to configure a mountain of environments.
 		
 		Visual Studio Community 2017
 		
-		QT (version forgotten)
+		QT
 
 Trust me, it's a hard work.
 
