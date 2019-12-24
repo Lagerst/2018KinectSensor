@@ -252,13 +252,14 @@ string s[32]={
 		"JointType_ThumbLeft	= 22",
 		"JointType_HandTipRight	= 23",
 		"JointType_ThumbRight	= 24",
-						"FacePointType_None	= 25",
-						"FacePointType_EyeLeft = 26",
-						"FacePointType_EyeRight	= 27",
-						"FacePointType_Nose	= 28",
-						"FacePointType_MouthCornerLeft	= 29",
-						"FacePointType_MouthCornerRight	= 30",
-						"FacePointType_Count	= (FacePointType_MouthCornerRight + 1)"
+
+		"FacePointType_None	= 25",
+		"FacePointType_EyeLeft = 26",
+		"FacePointType_EyeRight	= 27",
+		"FacePointType_Nose	= 28",
+		"FacePointType_MouthCornerLeft	= 29",
+		"FacePointType_MouthCornerRight	= 30",
+		"FacePointType_Count	= (FacePointType_MouthCornerRight + 1)"
 };
 
 void ExtractFaceRotationInDegrees(const Vector4* pQuaternion,int* pPitch,int* pYaw,int* pRoll)
@@ -287,20 +288,17 @@ int r[30]={};
 /// Handle new body data
 void CFaceBasics::ProcessBody(int nBodyCount,IBody** ppBodies)
 {
-	//记录操作结果是否成功
 	HRESULT hr;
-	//对于每一个IBody
 	for (int i = 0; i < nBodyCount; ++i)
 	{
 		IBody* pBody = ppBodies[i];
-		if (pBody)//还没有搞明白这里pBody和下面的bTracked有什么区别
+		if (pBody)
 		{
 			BOOLEAN bTracked = false;
 			hr = pBody->get_IsTracked(&bTracked);
 			if (SUCCEEDED(hr) && bTracked)
 			{
-				Joint joints[JointType_Count];//存储关节点类
-				//获得关节点类
+				Joint joints[JointType_Count];
 				hr = pBody->GetJoints(_countof(joints),joints);
 				if (SUCCEEDED(hr))
 				{
@@ -312,7 +310,6 @@ void CFaceBasics::ProcessBody(int nBodyCount,IBody** ppBodies)
 						//cout<<s[j]<<endl;
 						//cout<<"        x="<<x<<"  y="<<y<<"  z="<<z<<endl;
 						oFile<<x<<","<<y<<","<<z<<",";
-						//输出坐标 
 					}
 				}
 			}
@@ -535,8 +532,20 @@ void CFaceBasics::ColorPrint() {
 	mySource->Release();
 }
 
+string Get_Current_Date()
+{
+	time_t nowtime;
+	nowtime = time(NULL); //获取日历时间   
+	char tmp[64];
+	strftime(tmp,sizeof(tmp),"%Y-%m-%d-%H_%M_%S",localtime(&nowtime));
+	return tmp;
+}
+
+bool steady;
+
 Widget::Widget(QWidget *parent)
-	: QWidget(parent)   //初始化列表, 在子类中调用父类构造函数, parent的值(默认为0)传给了QWidget()构造函数; 这是为了创建一个新的窗体, 这个窗体是一个顶层窗体(因为QWidget()构造函数的第一个形参代表父窗口, 如果对应的形参为0, 则代表生成一个父窗口)
+	: QWidget(parent)   
+	//初始化列表, 在子类中调用父类构造函数, parent的值(默认为0)传给了QWidget()构造函数; 这是为了创建一个新的窗体, 这个窗体是一个顶层窗体(因为QWidget()构造函数的第一个形参代表父窗口, 如果对应的形参为0, 则代表生成一个父窗口)
 {
 	btn1 = new QPushButton(this);   //动态子对象btn1通过QPushButton类的构造函数创建
 	btn2 = new QPushButton(this);
@@ -564,21 +573,11 @@ Widget::Widget(QWidget *parent)
 	connect(btn2,SIGNAL(clicked()),this,SLOT(stop()));
 	connect(btn2,SIGNAL(clicked()),this,SLOT(stop()));
 }
+
 Widget::~Widget()
 {
 
 }
-
-string  Get_Current_Date()
-{
-	time_t nowtime;
-	nowtime = time(NULL); //获取日历时间   
-	char tmp[64];
-	strftime(tmp,sizeof(tmp),"%Y-%m-%d-%H_%M_%S",localtime(&nowtime));
-	return tmp;
-}
-
-bool steady;
 
 void Widget::add()  //实现槽函数
 {
@@ -596,15 +595,17 @@ void Widget::stop()  //实现槽函数
 	thread.stop();
 }
 
-void Thread::stop()
-{
-	steady = false;
-}
 
 Thread::Thread()
 {
 	steady = false;
 }
+
+void Thread::stop()
+{
+	steady = false;
+}
+
 
 void Thread::setThread(QString p,QString r,QString l)
 {
